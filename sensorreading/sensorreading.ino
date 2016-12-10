@@ -21,7 +21,7 @@ void setup() {
   Serial.print("Intializing SD Card...");
   pinMode(10, OUTPUT); 
   
-  if(!SD.begin(chipSelect)) 
+  if(!SD.begin(10)) 
   {
     Serial.println("Card failed, or not present");
     return;
@@ -72,11 +72,12 @@ void setup() {
     datalog.print("Ooops, no L3GD20 detected ... Check your wiring or I2C ADDR!");
     while(1);
   }
+  datalog.close();
 }
 
 void loop() {
   sensors_event_t event;
-
+  datalog = SD.open(filename, FILE_WRITE);
   if(datalog){
     //PRINT ACCELEROMETER DATA
     accel.getEvent(&event);
@@ -126,5 +127,6 @@ void loop() {
     datalog.println(F(""));
       
   }
+  datalog.close();
   delay(1);
 }
